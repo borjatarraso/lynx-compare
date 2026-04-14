@@ -4,15 +4,30 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name            = "lynx-compare"
-version         = "0.1"
+version         = "0.2"
 description     = "Lynx Compare — Side-by-side fundamental analysis comparison tool"
+readme          = "README.md"
 requires-python = ">=3.10"
 license         = {text = "BSD-3-Clause"}
 authors         = [{name = "Borja Tarraso", email = "borja.tarraso@member.fsf.org"}]
 dependencies    = [
+    "lynx-fa @ file:///home/overdrive/claude/lince-investor/lynx-fa-analysis",
     "rich>=13.7",
     "textual>=0.50",
+    "flask>=3.0",
 ]
+
+[project.optional-dependencies]
+pdf = ["weasyprint>=60"]
+test = ["robotframework>=7.0"]
+all = ["weasyprint>=60", "robotframework>=7.0"]
+
+[project.scripts]
+lynx-compare = "lynx_compare.__main__:main"
+lynx-compare-server = "lynx_compare.server:run_server"
 
 [tool.setuptools.packages.find]
 include = ["lynx_compare*"]
+
+[tool.setuptools.package-data]
+lynx_compare = ["img/*.png"]
