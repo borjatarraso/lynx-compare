@@ -179,10 +179,20 @@ See [docs/API.md](docs/API.md) for full API reference.
 ## Running Tests
 
 ```bash
-# Robot Framework tests
-pip install robotframework
-robot --pythonpath . tests/
+# Install with test dependencies
+pip install -e ".[test]"
+
+# Run all 81 tests
+robot tests/
+
+# Run a specific suite
+robot tests/test_engine.robot
+
+# Save HTML report
+robot --outputdir results/ tests/
 ```
+
+See [docs/TESTING.md](docs/TESTING.md) for full testing guide with suite descriptions.
 
 ## CLI Reference
 
