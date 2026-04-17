@@ -1,4 +1,4 @@
-# Lynx Compare — Python API Reference
+# Lynx Compare v1.0.0 — Python API Reference
 
 Lynx Compare can be used as a Python library in addition to the CLI. This document covers the public API.
 
@@ -418,3 +418,66 @@ Each metric has a defined comparison direction:
 1. **Per metric:** Determined by the comparison direction rules above
 2. **Per section:** Whichever company wins more metrics in the section
 3. **Overall:** Whichever company wins more sections; tied sections broken by total metric wins
+
+---
+
+## Export API
+
+The `lynx_compare.export` module provides export functionality.
+
+```python
+from lynx_compare.export import export_html, export_text, export_comparison, default_export_path
+
+# Generate HTML/text strings
+html = export_html(comparison_result)
+text = export_text(comparison_result)
+
+# Write to file (format detected from extension or explicit)
+path = export_comparison(comparison_result, "output.html", "html")
+path = export_comparison(comparison_result, "output.txt", "text")
+
+# Default path helper
+path = default_export_path(comparison_result, ".html")
+# -> ~/Documents/lynx-compare/AAPL_vs_MSFT_20260416_143022.html
+```
+
+---
+
+## About API
+
+The `lynx_compare.about` module provides app metadata.
+
+```python
+from lynx_compare.about import (
+    APP_NAME,          # "Lynx Compare"
+    DEVELOPER,         # "Borja Tarraso"
+    DEVELOPER_EMAIL,   # "borja.tarraso@member.fsf.org"
+    LICENSE_NAME,      # "BSD 3-Clause License"
+    about_text,        # full about string
+    about_lines,       # about as list of lines
+    check_easter_egg,  # True if input matches trigger
+    easter_egg_text,   # ASCII art
+)
+```
+
+---
+
+## Warnings
+
+Comparability warnings are generated automatically when comparing companies with different sectors, industries, or market cap tiers. All three are independent and non-exclusive.
+
+| Level | Severity | Condition |
+|-------|----------|-----------|
+| `sector` | High (red) | Different sectors |
+| `industry` | Medium (orange) | Different industries |
+| `tier` | Low (yellow) | Different market cap tiers |
+
+```python
+result = compare_companies("AAPL", "OCO.V")
+
+for w in result.warnings:
+    print(f"[{w.level}] {w.message}")
+# [sector] Sector mismatch: AAPL (Technology) vs OCO.V (Basic Materials)
+# [industry] Industry mismatch: AAPL (Consumer Electronics) vs OCO.V (Other Industrial Metals & Mining)
+# [tier] Tier mismatch: AAPL (Mega Cap) vs OCO.V (Micro Cap)
+```

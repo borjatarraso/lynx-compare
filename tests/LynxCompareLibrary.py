@@ -333,3 +333,193 @@ def check_easter_egg_whitespace(text: str) -> bool:
     """Easter egg should handle whitespace around triggers."""
     from lynx_compare.about import check_easter_egg
     return check_easter_egg(text)
+
+
+# ---------------------------------------------------------------------------
+# ComparisonView API keywords
+# ---------------------------------------------------------------------------
+
+def get_comparison_view():
+    """Build a ComparisonView from the mock result."""
+    from lynx_compare.api import ComparisonView
+    cr = _build_mock_comparison_result()
+    return ComparisonView(cr)
+
+
+def view_winner_ticker(view) -> str:
+    return view.winner_ticker or "TIE"
+
+
+def view_winner_name(view) -> str:
+    return view.winner_name or "TIE"
+
+
+def view_summary(view) -> str:
+    return view.summary()
+
+
+def view_section_names(view) -> list[str]:
+    return view.section_names
+
+
+def view_section_winner(view, section_name: str) -> str:
+    return view.section_winner(section_name)
+
+
+def view_section_winner_ticker(view, section_name: str) -> str:
+    return view.section_winner_ticker(section_name) or "TIE"
+
+
+def view_metric_winner(view, key: str) -> str:
+    return view.metric_winner(key)
+
+
+def view_metric_winner_ticker(view, key: str) -> str:
+    return view.metric_winner_ticker(key) or "N/A"
+
+
+def view_has_warnings(view) -> bool:
+    return view.has_warnings
+
+
+def view_to_dict(view) -> dict:
+    return view.to_dict()
+
+
+def view_scoreboard(view) -> dict:
+    return view.scoreboard()
+
+
+def view_metrics_won_by(view, ticker: str) -> int:
+    return len(view.metrics_won_by(ticker))
+
+
+def view_sections_won_by(view, ticker: str) -> int:
+    return len(view.sections_won_by(ticker))
+
+
+def view_repr(view) -> str:
+    return repr(view)
+
+
+# ---------------------------------------------------------------------------
+# Warning keywords (detailed)
+# ---------------------------------------------------------------------------
+
+def build_mock_with_sector_mismatch():
+    """Build a mock where sectors differ."""
+    cr = _build_mock_comparison_result()
+    cr.sector_a = "Technology"
+    cr.sector_b = "Healthcare"
+    cr.warnings = [
+        from_lynx_compare_engine_Warning("sector", "Sector mismatch: AAPL (Technology) vs MSFT (Healthcare)"),
+    ]
+    return cr
+
+
+def build_mock_with_tier_mismatch():
+    """Build a mock where tiers differ."""
+    from lynx_compare.engine import Warning
+    cr = _build_mock_comparison_result()
+    cr.tier_a = "Mega Cap"
+    cr.tier_b = "Micro Cap"
+    cr.warnings = [
+        Warning(level="tier", message="Tier mismatch: AAPL (Mega Cap) vs MSFT (Micro Cap)"),
+    ]
+    return cr
+
+
+def build_mock_with_all_warnings():
+    """Build a mock with sector + industry + tier warnings."""
+    from lynx_compare.engine import Warning
+    cr = _build_mock_comparison_result()
+    cr.sector_a = "Technology"
+    cr.sector_b = "Healthcare"
+    cr.tier_a = "Mega Cap"
+    cr.tier_b = "Micro Cap"
+    cr.warnings = [
+        Warning(level="sector", message="Sector mismatch"),
+        Warning(level="industry", message="Industry mismatch"),
+        Warning(level="tier", message="Tier mismatch"),
+    ]
+    return cr
+
+
+def from_lynx_compare_engine_Warning(level, message):
+    """Helper to create a Warning object."""
+    from lynx_compare.engine import Warning
+    return Warning(level=level, message=message)
+
+
+def count_warnings(cr) -> int:
+    return len(cr.warnings)
+
+
+def warning_levels(cr) -> list[str]:
+    return [w.level for w in cr.warnings]
+
+
+# ---------------------------------------------------------------------------
+# GUI / module import keywords
+# ---------------------------------------------------------------------------
+
+def gui_module_importable() -> bool:
+    """Check that the GUI module can be imported."""
+    try:
+        from lynx_compare.gui import app as _  # noqa: F401
+        return True
+    except Exception:
+        return False
+
+
+def tui_module_importable() -> bool:
+    """Check that the TUI module can be imported."""
+    try:
+        from lynx_compare.tui import app as _  # noqa: F401
+        return True
+    except Exception:
+        return False
+
+
+def api_module_importable() -> bool:
+    """Check that the API module can be imported."""
+    try:
+        from lynx_compare import api as _  # noqa: F401
+        return True
+    except Exception:
+        return False
+
+
+def export_module_importable() -> bool:
+    """Check that the export module can be imported."""
+    try:
+        from lynx_compare import export as _  # noqa: F401
+        return True
+    except Exception:
+        return False
+
+
+# ---------------------------------------------------------------------------
+# Export format keywords
+# ---------------------------------------------------------------------------
+
+def export_text_contains_warnings() -> bool:
+    """Check that text export includes warning text."""
+    from lynx_compare.export import export_text
+    cr = build_mock_with_all_warnings()
+    text = export_text(cr)
+    return "SECTOR" in text and "INDUSTRY" in text and "TIER" in text
+
+
+def export_html_contains_warnings() -> bool:
+    """Check that HTML export includes warning sections."""
+    from lynx_compare.export import export_html
+    cr = build_mock_with_all_warnings()
+    html = export_html(cr)
+    return "Sector" in html and "Industry" in html and "Tier" in html
+
+
+def api_easter_egg_endpoint_has_art() -> bool:
+    """Check that the easter egg endpoint returns ASCII art."""
+    text = api_get_easter_egg()
+    return "LYNX" in text and "o.o" in text

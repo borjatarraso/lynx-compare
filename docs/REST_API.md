@@ -51,7 +51,7 @@ Health check endpoint.
 ```json
 {
   "status": "ok",
-  "version": "0.1.0"
+  "version": "1.0.0"
 }
 ```
 
@@ -65,7 +65,7 @@ Returns developer and license information.
 ```json
 {
   "name": "Lynx Compare",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "developer": "Borja Tarraso",
   "email": "borja.tarraso@member.fsf.org",
   "license": "BSD 3-Clause License",
