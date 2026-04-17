@@ -11,7 +11,7 @@ build/
 .vscode/
 .idea/
 
-# Claude
+# Tool config
 .claude/
 
 # Test output
