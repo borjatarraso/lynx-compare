@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import os
 
-from lynx_compare import __author__, __version__, __year__
+from lynx_compare import __author__, __version__, __year__, SUITE_LABEL, SUITE_NAME, SUITE_VERSION
 
 # ---------------------------------------------------------------------------
 # Developer and license metadata
@@ -69,6 +69,7 @@ def about_lines() -> list[str]:
         lines.append("")
     lines.extend([
         f"{APP_NAME} v{__version__}",
+        f"Part of {SUITE_LABEL}",
         f"{APP_DESCRIPTION}",
         "",
         f"Developer:  {DEVELOPER}",

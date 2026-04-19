@@ -6,7 +6,7 @@ import argparse
 import sys
 from concurrent.futures import ThreadPoolExecutor, TimeoutError as FuturesTimeout
 
-from lynx_compare import __author__, __version__, __year__
+from lynx_compare import __author__, __version__, __year__, SUITE_LABEL
 
 DEFAULT_TIMEOUT = 30
 
@@ -116,7 +116,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--version",
         action="version",
-        version=f"%(prog)s {__version__} ({__year__}) by {__author__}",
+        version=f"%(prog)s {__version__}  |  {SUITE_LABEL}  ({__year__}) by {__author__}",
     )
 
     # --- About & Export ---

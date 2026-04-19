@@ -22,7 +22,7 @@ import json
 import sys
 from dataclasses import asdict
 
-from lynx_compare import __version__
+from lynx_compare import __version__, SUITE_NAME, SUITE_VERSION
 from lynx_compare.about import (
     APP_NAME,
     DEVELOPER,
@@ -54,6 +54,8 @@ def create_app(run_mode: str = "production"):
         return jsonify({
             "name": APP_NAME,
             "version": __version__,
+            "suite": SUITE_NAME,
+            "suite_version": SUITE_VERSION,
             "endpoints": [
                 "/about",
                 "/compare",
@@ -64,7 +66,11 @@ def create_app(run_mode: str = "production"):
 
     @app.route("/health")
     def health():
-        return jsonify({"status": "ok", "version": __version__})
+        return jsonify({
+            "status": "ok",
+            "version": __version__,
+            "suite_version": SUITE_VERSION,
+        })
 
     # -------------------------------------------------------------------
     # About
@@ -75,6 +81,8 @@ def create_app(run_mode: str = "production"):
         return jsonify({
             "name": APP_NAME,
             "version": __version__,
+            "suite": SUITE_NAME,
+            "suite_version": SUITE_VERSION,
             "developer": DEVELOPER,
             "email": DEVELOPER_EMAIL,
             "license": LICENSE_NAME,

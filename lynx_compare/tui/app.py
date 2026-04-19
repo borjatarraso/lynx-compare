@@ -110,7 +110,7 @@ class AboutModal(ModalScreen[None]):
     ]
 
     def compose(self) -> ComposeResult:
-        from lynx_compare import __version__, __year__
+        from lynx_compare import __version__, __year__, SUITE_LABEL
         from lynx_compare.about import (
             APP_NAME, APP_DESCRIPTION, DEVELOPER, DEVELOPER_EMAIL,
             LICENSE_NAME, LICENSE_TEXT, _load_logo,
@@ -122,6 +122,7 @@ class AboutModal(ModalScreen[None]):
                 yield Static(logo, id="about-logo")
             yield Label(f"{DIAMOND} {APP_NAME} {DIAMOND}", id="about-title")
             yield Label(f"v{__version__}", id="about-version")
+            yield Label(f"Part of {SUITE_LABEL}", id="about-suite")
             yield Label(APP_DESCRIPTION, id="about-desc")
 
             yield Label("Developer", classes="about-heading")

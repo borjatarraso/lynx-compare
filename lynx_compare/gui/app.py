@@ -191,7 +191,7 @@ class AboutDialog(tk.Toplevel):
         self.transient(parent)
         self.grab_set()
 
-        from lynx_compare import __version__, __year__
+        from lynx_compare import __version__, __year__, SUITE_LABEL
         from lynx_compare.about import (
             APP_NAME, APP_DESCRIPTION, DEVELOPER, DEVELOPER_EMAIL,
             LICENSE_NAME, LICENSE_TEXT,
@@ -214,6 +214,9 @@ class AboutDialog(tk.Toplevel):
         ).pack()
         tk.Label(
             self, text=f"v{__version__}", font=FONT_SMALL, bg=BG, fg=FG_DIM,
+        ).pack()
+        tk.Label(
+            self, text=f"Part of {SUITE_LABEL}", font=FONT_SMALL, bg=BG, fg=FG_DIM,
         ).pack()
         tk.Label(
             self, text=APP_DESCRIPTION, font=FONT_ABOUT, bg=BG, fg=FG,
