@@ -5,7 +5,7 @@
 All four interface modes include an About section displaying:
 
 - **Application name**: Lynx Compare
-- **Version**: v1.0.0
+- **Version**: v1.0
 - **Developer**: Borja Tarraso <borja.tarraso@member.fsf.org>
 - **License**: BSD 3-Clause License (full text included)
 
@@ -15,7 +15,7 @@ All four interface modes include an About section displaying:
 | ----------- | --------------------------------------------------- |
 | Console     | `lynx-compare --about`                              |
 | Interactive | Type `about` at the prompt                          |
-| TUI         | Press `Ctrl+A` (available on input and result screens) |
+| TUI         | Press `F1` (available on input and result screens) |
 | Graphical   | Click the **About** button in the toolbar           |
 
 ### Graphical About Dialog

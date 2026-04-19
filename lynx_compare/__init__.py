@@ -11,7 +11,7 @@ Public API
 'MSFT'
 """
 
-__version__ = "1.0.0"
+__version__ = "1.0"
 __author__ = "Borja Tarraso <borja.tarraso@member.fsf.org>"
 __year__ = "2026"
 

@@ -533,7 +533,7 @@ class SplashScreen:
         ).pack(pady=(8, 0))
 
         tk.Label(
-            center, text="v1.0.0",
+            center, text="v1.0",
             font=FONT_TINY, bg=SPLASH_BG, fg=FG_DIM,
         ).pack(pady=(16, 0))
 

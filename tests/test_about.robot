@@ -21,7 +21,7 @@ About Text Contains License Info
 About Text Contains Version
     [Documentation]    Verify about text includes the version string.
     ${text}=    Get About Text
-    Should Contain    ${text}    v1.0.0
+    Should Contain    ${text}    v1.0
 
 About Lines Returns List
     [Documentation]    Verify about_lines returns a non-empty list.

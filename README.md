@@ -107,7 +107,7 @@ Commands: `timeout N`, `export FILE`, `about`, `quit`.
 lynx-compare -p -tui
 ```
 
-Keyboard shortcuts: `Ctrl+Q` quit, `Ctrl+X` export, `Ctrl+A` about.
+Keyboard shortcuts: `q` quit, `x` export, `F1` about.
 
 ### Graphical Interface (`-x`)
 

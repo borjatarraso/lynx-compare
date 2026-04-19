@@ -45,7 +45,7 @@ lynx-compare -p AAPL MSFT --export text
 
 ### TUI Mode
 
-Press `Ctrl+E` on the result screen. A dialog shows the default save path (pre-filled with tickers and timestamp). Change the extension to switch format.
+Press `x` on the result screen. A dialog shows the default save path (pre-filled with tickers and timestamp). Change the extension to switch format.
 
 ### Graphical Mode
 

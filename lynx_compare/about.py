@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import os
+
 from lynx_compare import __author__, __version__, __year__
 
 # ---------------------------------------------------------------------------
@@ -48,9 +50,24 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 """
 
 
+def _load_logo() -> str:
+    """Load the ASCII logo from img/logo_ascii.txt."""
+    logo_path = os.path.join(os.path.dirname(__file__), "img", "logo_ascii.txt")
+    try:
+        with open(logo_path, encoding="utf-8") as f:
+            return f.read().rstrip()
+    except OSError:
+        return ""
+
+
 def about_lines() -> list[str]:
     """Return About information as a list of plain-text lines."""
-    return [
+    lines: list[str] = []
+    logo = _load_logo()
+    if logo:
+        lines.append(logo)
+        lines.append("")
+    lines.extend([
         f"{APP_NAME} v{__version__}",
         f"{APP_DESCRIPTION}",
         "",
@@ -60,7 +77,8 @@ def about_lines() -> list[str]:
         f"License:    {LICENSE_NAME}",
         "",
         LICENSE_TEXT.rstrip(),
-    ]
+    ])
+    return lines
 
 
 def about_text() -> str:

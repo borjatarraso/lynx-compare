@@ -48,10 +48,16 @@ class AboutModal(ModalScreen[None]):
     }
     #about-dialog {
         width: 72;
-        height: 34;
+        height: auto;
+        max-height: 90%;
         border: round cyan;
         padding: 1 2;
         background: $surface;
+    }
+    #about-logo {
+        text-align: center;
+        color: cyan;
+        margin-bottom: 1;
     }
     #about-title {
         text-align: center;
@@ -107,10 +113,13 @@ class AboutModal(ModalScreen[None]):
         from lynx_compare import __version__, __year__
         from lynx_compare.about import (
             APP_NAME, APP_DESCRIPTION, DEVELOPER, DEVELOPER_EMAIL,
-            LICENSE_NAME, LICENSE_TEXT,
+            LICENSE_NAME, LICENSE_TEXT, _load_logo,
         )
 
         with Vertical(id="about-dialog"):
+            logo = _load_logo()
+            if logo:
+                yield Static(logo, id="about-logo")
             yield Label(f"{DIAMOND} {APP_NAME} {DIAMOND}", id="about-title")
             yield Label(f"v{__version__}", id="about-version")
             yield Label(APP_DESCRIPTION, id="about-desc")
@@ -352,9 +361,9 @@ class InputScreen(Screen):
     """Screen that collects two company identifiers."""
 
     BINDINGS = [
-        Binding("ctrl+q", "app.quit", "Quit", show=True),
-        Binding("ctrl+t", "change_timeout", "Timeout", show=True),
-        Binding("ctrl+a", "show_about", "About", show=True),
+        Binding("q", "app.quit", "Quit", show=True),
+        Binding("t", "change_timeout", "Timeout", show=True),
+        Binding("f1", "show_about", "About", show=True),
         Binding("tab", "focus_next", "Next", show=True),
         Binding("shift+tab", "focus_previous", "Prev", show=True),
     ]
@@ -661,11 +670,10 @@ class ResultScreen(Screen):
     """Screen that displays comparison results."""
 
     BINDINGS = [
-        Binding("ctrl+q", "app.quit", "Quit", show=True),
-        Binding("ctrl+t", "change_timeout", "Timeout", show=True),
-        Binding("ctrl+a", "show_about", "About", show=True),
-        Binding("ctrl+e", "export", "Export", show=True),
         Binding("q", "pop_screen", "Back", show=True),
+        Binding("t", "change_timeout", "Timeout", show=True),
+        Binding("f1", "show_about", "About", show=True),
+        Binding("x", "export", "Export", show=True),
         Binding("escape", "pop_screen", "Back", show=False),
         Binding("tab", "focus_next", "Next Section", show=True),
         Binding("shift+tab", "focus_previous", "Prev Section", show=True),
@@ -948,9 +956,9 @@ class LynxCompareApp(App):
     """
 
     BINDINGS = [
-        Binding("ctrl+q", "quit", "Quit", show=True),
-        Binding("ctrl+t", "change_timeout", "Timeout", show=True),
-        Binding("ctrl+a", "show_about", "About", show=True),
+        Binding("q", "quit", "Quit", show=True),
+        Binding("t", "change_timeout", "Timeout", show=True),
+        Binding("f1", "show_about", "About", show=True),
         Binding("tab", "focus_next", "Next", show=True),
         Binding("shift+tab", "focus_previous", "Prev", show=True),
     ]

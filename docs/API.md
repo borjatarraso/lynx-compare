@@ -1,4 +1,4 @@
-# Lynx Compare v1.0.0 — Python API Reference
+# Lynx Compare v1.0 — Python API Reference
 
 Lynx Compare can be used as a Python library in addition to the CLI. This document covers the public API.
 
