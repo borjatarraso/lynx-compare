@@ -5,7 +5,7 @@
 All four interface modes include an About section displaying:
 
 - **Application name**: Lynx Compare
-- **Version**: v1.0
+- **Version**: v2.0
 - **Developer**: Borja Tarraso <borja.tarraso@member.fsf.org>
 - **License**: BSD 3-Clause License (full text included)
 

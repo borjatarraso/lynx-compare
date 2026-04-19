@@ -1,4 +1,4 @@
-# Lynx Compare v1.0 — REST API Reference
+# Lynx Compare v2.0 — REST API Reference
 
 Lynx Compare exposes a REST API via Flask for programmatic access over HTTP.
 
@@ -36,7 +36,7 @@ Returns API information and available endpoints.
 ```json
 {
   "name": "Lynx Compare",
-  "version": "1.0",
+  "version": "2.0",
   "endpoints": ["/about", "/compare", "/export", "/health"]
 }
 ```
@@ -51,7 +51,7 @@ Health check endpoint.
 ```json
 {
   "status": "ok",
-  "version": "1.0"
+  "version": "2.0"
 }
 ```
 
@@ -65,7 +65,7 @@ Returns developer and license information.
 ```json
 {
   "name": "Lynx Compare",
-  "version": "1.0",
+  "version": "2.0",
   "developer": "Borja Tarraso",
   "email": "borja.tarraso@member.fsf.org",
   "license": "BSD 3-Clause License",

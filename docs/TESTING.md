@@ -1,4 +1,4 @@
-# Lynx Compare v1.0 — Testing Guide
+# Lynx Compare v2.0 — Testing Guide
 
 Lynx Compare uses [Robot Framework](https://robotframework.org/) for automated testing. All tests run offline using mock data — no network connection or live market data is needed.
 
@@ -181,7 +181,7 @@ Validates about/metadata:
 
 ### test_version.robot
 Validates version consistency:
-- Version is `1.0`
+- Version is `2.0`
 - App name is `Lynx Compare`
 - `--version` flag prints version cleanly
 - `--about` flag shows current version
