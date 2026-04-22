@@ -5,6 +5,8 @@ from __future__ import annotations
 from textual.app import App, ComposeResult
 from textual.binding import Binding
 from textual.containers import Horizontal, Vertical, VerticalScroll
+
+from lynx_investor_core.pager import PagingAppMixin, tui_paging_bindings
 from textual.screen import ModalScreen, Screen
 from textual.widgets import (
     Button,
@@ -944,7 +946,7 @@ class ResultScreen(Screen):
 # Main app
 # ---------------------------------------------------------------------------
 
-class LynxCompareApp(App):
+class LynxCompareApp(PagingAppMixin, App):
     """Textual application for Lynx Compare."""
 
     TITLE = "Lynx Compare"
@@ -962,6 +964,7 @@ class LynxCompareApp(App):
         Binding("f1", "show_about", "About", show=True),
         Binding("tab", "focus_next", "Next", show=True),
         Binding("shift+tab", "focus_previous", "Prev", show=True),
+        *tui_paging_bindings(),
     ]
 
     def __init__(self, cli_args) -> None:

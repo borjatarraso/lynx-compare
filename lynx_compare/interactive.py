@@ -6,6 +6,8 @@ from rich.console import Console
 from rich.prompt import Prompt, IntPrompt
 from rich.progress import Progress, SpinnerColumn, TextColumn
 
+from lynx_investor_core.pager import console_pager, paged_print
+
 console = Console()
 errc = Console(stderr=True)
 
@@ -106,7 +108,8 @@ def run_interactive(args) -> None:
 
             result = compare(report_a, report_b)
             last_result = result
-            display_comparison(result)
+            with console_pager(console):
+                display_comparison(result)
 
             console.print()
             console.print(
