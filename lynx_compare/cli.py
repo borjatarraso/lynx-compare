@@ -11,6 +11,16 @@ from lynx_compare import __author__, __version__, __year__, SUITE_LABEL
 DEFAULT_TIMEOUT = 30
 
 
+def _ticker_completer(prefix, **kw):
+    """Dynamic completer that returns cached tickers from the core storage."""
+    try:
+        from lynx_investor_core.storage import list_cached_tickers
+        items = list_cached_tickers() or []
+        return [t["ticker"] for t in items if t["ticker"].startswith(prefix.upper())]
+    except Exception:
+        return []
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="lynx-compare",
@@ -57,12 +67,13 @@ def build_parser() -> argparse.ArgumentParser:
     )
 
     # --- Positional: two companies ---
-    parser.add_argument(
+    companies_arg = parser.add_argument(
         "companies",
         nargs="*",
         metavar="COMPANY",
         help="Two company identifiers (ticker, ISIN, or name) to compare",
     )
+    companies_arg.completer = _ticker_completer
 
     # --- Interface mode ---
     ui_mode = parser.add_mutually_exclusive_group()
@@ -182,6 +193,13 @@ def _run_analysis(identifier: str, args) -> object:
 def run_cli() -> None:
     """Parse arguments and dispatch to the appropriate mode."""
     parser = build_parser()
+
+    try:
+        import argcomplete
+        argcomplete.autocomplete(parser)
+    except ImportError:
+        pass  # argcomplete optional at runtime
+
     args = parser.parse_args()
 
     from rich.console import Console
