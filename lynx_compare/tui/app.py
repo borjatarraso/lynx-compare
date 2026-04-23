@@ -961,6 +961,7 @@ class LynxCompareApp(PagingAppMixin, App):
     BINDINGS = [
         Binding("q", "quit", "Quit", show=True),
         Binding("t", "change_timeout", "Timeout", show=True),
+        Binding("ctrl+t", "cycle_theme", "Theme", show=True),
         Binding("f1", "show_about", "About", show=True),
         Binding("tab", "focus_next", "Next", show=True),
         Binding("shift+tab", "focus_previous", "Prev", show=True),
@@ -970,8 +971,24 @@ class LynxCompareApp(PagingAppMixin, App):
     def __init__(self, cli_args) -> None:
         super().__init__()
         self.cli_args = cli_args
+        self._theme_rotation: list[str] = []
 
     def on_mount(self) -> None:
+        # Register the Suite-wide theme gallery (31 themes, 6 families).
+        # Safe to skip if core is too old — the app still works on the
+        # Textual default theme.
+        try:
+            from lynx_investor_core.themes import (
+                register_suite_themes, SUITE_THEME_NAMES,
+            )
+            register_suite_themes(self)
+            self._theme_rotation = [
+                n for n in SUITE_THEME_NAMES if n in self.available_themes
+            ]
+            if "lynx-theme" in self.available_themes:
+                self.theme = "lynx-theme"
+        except ImportError:
+            pass
         self.push_screen(InputScreen())
 
     def action_change_timeout(self) -> None:
@@ -984,6 +1001,20 @@ class LynxCompareApp(PagingAppMixin, App):
 
     def action_show_about(self) -> None:
         self.push_screen(AboutModal())
+
+    def action_cycle_theme(self) -> None:
+        """Cycle through the Suite-wide theme gallery (Ctrl+T)."""
+        rotation = self._theme_rotation or [
+            n for n in self.available_themes if n.startswith(("lynx", "catppuccin", "dracula"))
+        ]
+        if not rotation:
+            return
+        try:
+            idx = rotation.index(self.theme)
+        except ValueError:
+            idx = -1
+        self.theme = rotation[(idx + 1) % len(rotation)]
+        self.notify(f"Theme: {self.theme}", severity="information")
 
 
 def run_tui(args) -> None:
