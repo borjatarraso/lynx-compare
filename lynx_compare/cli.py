@@ -85,13 +85,24 @@ def build_parser() -> argparse.ArgumentParser:
         help="Launch the graphical user interface",
     )
 
+    def _positive_timeout(value: str) -> int:
+        try:
+            n = int(value)
+        except ValueError:
+            raise argparse.ArgumentTypeError(f"{value} is not an integer")
+        if n < 5:
+            raise argparse.ArgumentTypeError(
+                f"timeout must be >= 5 seconds (got {n})",
+            )
+        return n
+
     # --- Data options ---
     parser.add_argument(
         "--timeout",
-        type=int,
+        type=_positive_timeout,
         default=DEFAULT_TIMEOUT,
         metavar="SECS",
-        help=f"Timeout in seconds per company analysis (default: {DEFAULT_TIMEOUT})",
+        help=f"Timeout in seconds per company analysis (default: {DEFAULT_TIMEOUT}, min: 5)",
     )
     parser.add_argument(
         "--refresh",

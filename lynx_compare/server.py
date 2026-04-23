@@ -22,6 +22,8 @@ import json
 import sys
 from dataclasses import asdict
 
+import re
+
 from lynx_compare import __version__, SUITE_NAME, SUITE_VERSION
 from lynx_compare.about import (
     APP_NAME,
@@ -33,6 +35,22 @@ from lynx_compare.about import (
     easter_egg_text,
     check_easter_egg,
 )
+
+# Narrow regex for user-supplied tickers / ISINs / names.
+# Letters, digits, dots, hyphens, underscore, caret (^GSPC) — nothing that
+# could inject CR/LF or semicolons into the Content-Disposition header.
+_TICKER_SAFE_RE = re.compile(r"^[A-Za-z0-9._\-\^]{1,24}$")
+
+
+def _validate_identifier(raw: str) -> tuple[str, str]:
+    """Return ``(normalised, error)``; ``error`` empty on success."""
+    if not raw:
+        return "", "identifier cannot be empty"
+    if len(raw) > 24:
+        return "", "identifier too long (max 24 characters)"
+    if not _TICKER_SAFE_RE.match(raw):
+        return "", "identifier contains disallowed characters"
+    return raw.upper(), ""
 
 
 def create_app(run_mode: str = "production"):
@@ -124,6 +142,15 @@ def create_app(run_mode: str = "production"):
                 "usage": "GET /compare?a=AAPL&b=MSFT",
             }), 400
 
+        id_a, err_a = _validate_identifier(id_a)
+        if err_a:
+            return jsonify({"error": f"parameter 'a': {err_a}"}), 400
+        id_b, err_b = _validate_identifier(id_b)
+        if err_b:
+            return jsonify({"error": f"parameter 'b': {err_b}"}), 400
+        if id_a == id_b:
+            return jsonify({"error": "identifiers 'a' and 'b' must differ"}), 400
+
         refresh = _bool_param(data.get("refresh", False))
         download_reports = _bool_param(data.get("download_reports", False))
         download_news = _bool_param(data.get("download_news", False))
@@ -144,7 +171,9 @@ def create_app(run_mode: str = "production"):
                 "data": view.to_dict(),
             })
         except Exception as exc:
-            return jsonify({"error": str(exc)}), 500
+            # Log the true error server-side; surface a generic message.
+            app.logger.exception("compare failed for %r / %r", id_a, id_b)
+            return jsonify({"error": "comparison failed"}), 500
 
     # -------------------------------------------------------------------
     # Export
@@ -170,6 +199,13 @@ def create_app(run_mode: str = "production"):
             return jsonify({
                 "error": "Both 'a' and 'b' parameters are required.",
             }), 400
+
+        id_a, err_a = _validate_identifier(id_a)
+        if err_a:
+            return jsonify({"error": f"parameter 'a': {err_a}"}), 400
+        id_b, err_b = _validate_identifier(id_b)
+        if err_b:
+            return jsonify({"error": f"parameter 'b': {err_b}"}), 400
 
         if fmt not in ("html", "text", "txt", "pdf"):
             return jsonify({
@@ -226,7 +262,8 @@ def create_app(run_mode: str = "production"):
             )
 
         except Exception as exc:
-            return jsonify({"error": str(exc)}), 500
+            app.logger.exception("export failed for %r / %r", id_a, id_b)
+            return jsonify({"error": "export failed"}), 500
 
     return app
 

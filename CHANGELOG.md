@@ -1,5 +1,21 @@
 # Changelog
 
+## [4.0] - 2026-04-23
+
+Part of **Lince Investor Suite v4.0** coordinated release.
+
+### Added
+- Dedicated ticker / identifier validator on every HTTP endpoint of the
+  compare server — blocks CR/LF / semicolon injection into
+  `Content-Disposition` filenames.
+
+### Changed
+- Server no longer echoes upstream exception text; errors are logged
+  server-side and returned as generic "comparison failed" / "export
+  failed" messages.
+- `--timeout` must be >= 5 seconds.
+- Depends on `lynx-investor-core>=4.0`.
+
 All notable changes to **Lynx Compare** are documented in this file.
 
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
