@@ -63,6 +63,18 @@ def create_app(run_mode: str = "production"):
     from lynx.core.storage import set_mode
     set_mode(run_mode)
 
+    # v5.3: OpenAPI spec + Swagger UI.
+    try:
+        from lynx_investor_core.openapi import mount_openapi
+        mount_openapi(
+            app,
+            title="Lynx Compare API",
+            version=__version__,
+            description="Side-by-side fundamental analysis of 2 or more companies.",
+        )
+    except ImportError:
+        pass
+
     # -------------------------------------------------------------------
     # Health / root
     # -------------------------------------------------------------------

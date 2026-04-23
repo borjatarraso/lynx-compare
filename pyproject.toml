@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name            = "lynx-compare"
-version = "5.2"
+version = "5.3"
 description     = "Lynx Compare — Side-by-side fundamental analysis comparison tool"
 readme          = "README.md"
 requires-python = ">=3.10"
@@ -25,7 +25,7 @@ classifiers     = [
     "Programming Language :: Python :: 3.13",
 ]
 dependencies    = [
-    "lynx-investor-core>=5.2",
+    "lynx-investor-core>=5.3",
     "lynx-fa @ file:///home/overdrive/claude/lince-investor/lynx-fa-analysis",
     "rich>=13.7",
     "textual>=0.50",
@@ -47,6 +47,9 @@ Changelog  = "https://github.com/borjatarraso/lynx-compare/blob/main/CHANGELOG.m
 [project.scripts]
 lynx-compare = "lynx_compare.__main__:main"
 lynx-compare-server = "lynx_compare.server:run_server"
+
+[project.entry-points."lynx_investor_suite.agents"]
+compare = "lynx_compare.plugin:register"
 
 [tool.setuptools.packages.find]
 include = ["lynx_compare*"]
