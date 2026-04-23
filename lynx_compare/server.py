@@ -265,6 +265,65 @@ def create_app(run_mode: str = "production"):
             app.logger.exception("export failed for %r / %r", id_a, id_b)
             return jsonify({"error": "export failed"}), 500
 
+    # -------------------------------------------------------------------
+    # N-way compare (v5.1)
+    # -------------------------------------------------------------------
+
+    @app.route("/compare-many", methods=["GET", "POST"])
+    def compare_many_endpoint():
+        """Compare two or more companies at once.
+
+        GET  /compare-many?tickers=AAPL,MSFT,GOOGL
+        POST /compare-many  {"tickers": ["AAPL", "MSFT", "GOOGL"]}
+        """
+        if request.method == "POST":
+            data = request.get_json(silent=True) or {}
+            raw_tickers = data.get("tickers", [])
+            if isinstance(raw_tickers, str):
+                raw_tickers = [t.strip() for t in raw_tickers.split(",") if t.strip()]
+        else:
+            raw = request.args.get("tickers", "")
+            raw_tickers = [t.strip() for t in raw.split(",") if t.strip()]
+            data = request.args.to_dict()
+
+        if len(raw_tickers) < 2:
+            return jsonify({
+                "error": "compare-many requires at least 2 tickers",
+                "usage": "GET /compare-many?tickers=AAPL,MSFT,GOOGL",
+            }), 400
+        if len(raw_tickers) > 10:
+            return jsonify({"error": "too many tickers (max 10)"}), 400
+
+        validated: list[str] = []
+        for t in raw_tickers:
+            norm, err = _validate_identifier(t)
+            if err:
+                return jsonify({"error": f"ticker '{t}': {err}"}), 400
+            validated.append(norm)
+        if len(set(validated)) != len(validated):
+            return jsonify({"error": "tickers must be unique"}), 400
+
+        refresh = _bool_param(data.get("refresh", False))
+        download_reports = _bool_param(data.get("download_reports", False))
+        download_news = _bool_param(data.get("download_news", False))
+
+        try:
+            from lynx_compare.multi import compare_many
+            result = compare_many(
+                *validated,
+                refresh=refresh,
+                download_reports=download_reports,
+                download_news=download_news,
+            )
+        except Exception:
+            app.logger.exception("compare_many failed for %r", validated)
+            return jsonify({"error": "comparison failed"}), 500
+
+        return jsonify({
+            "summary": result.summary(),
+            "data": result.as_dict(),
+        })
+
     return app
 
 
