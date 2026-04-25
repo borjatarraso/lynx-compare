@@ -1231,6 +1231,12 @@ class LynxCompareGUI:
     # ---- Run -------------------------------------------------------------
 
     def run(self) -> None:
+        # Bottom-right language toggle (US/ES/IT/DE/FR/FA).
+        try:
+            from lynx_investor_core.lang_widget import mount_tk_language_button
+            mount_tk_language_button(self.root)
+        except Exception:
+            pass
         self.root.mainloop()
 
 
