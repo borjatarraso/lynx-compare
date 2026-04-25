@@ -11,12 +11,12 @@ Public API
 'MSFT'
 """
 
-__version__ = "5.5.1"
+__version__ = "6.0.0"
 __author__ = "Borja Tarraso <borja.tarraso@member.fsf.org>"
 __year__ = "2026"
 
 SUITE_NAME = "Lince Investor Suite"
-SUITE_VERSION = "5.5.1"
+SUITE_VERSION = "6.0.0"
 SUITE_LABEL = f"{SUITE_NAME} v{SUITE_VERSION}"
 
 

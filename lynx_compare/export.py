@@ -249,6 +249,14 @@ def export_text(cr: ComparisonResult) -> str:
     lines.append(f"Developer: {DEVELOPER} | License: {LICENSE_NAME}")
     lines.append("")
 
+    # Shared author / signature footer (every Suite export carries it).
+    try:
+        from lynx_investor_core.author_footer import text_footer
+        from lynx_compare import SUITE_LABEL
+        lines.append(text_footer(SUITE_LABEL).rstrip())
+    except ImportError:
+        pass
+
     return "\n".join(lines)
 
 
@@ -556,6 +564,14 @@ def export_html(cr: ComparisonResult) -> str:
         f'| Developer: {_esc(DEVELOPER)} | License: {_esc(LICENSE_NAME)}'
         f'</div>'
     )
+
+    # Shared author / signature footer.
+    try:
+        from lynx_investor_core.author_footer import html_footer
+        from lynx_compare import SUITE_LABEL
+        parts.append(html_footer(SUITE_LABEL))
+    except ImportError:
+        pass
 
     parts.append('</body>\n</html>\n')
     return "\n".join(parts)
