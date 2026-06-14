@@ -23,7 +23,7 @@ from typing import Any, Optional
 
 from lynx.models import AnalysisReport
 
-from lynx_compare.engine import (
+from lynx_compare.core.engine import (
     ComparisonResult,
     MetricResult,
     SectionResult,

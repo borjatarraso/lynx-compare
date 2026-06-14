@@ -33,7 +33,7 @@ def __getattr__(name: str):
         from lynx_compare import api
         return getattr(api, name)
     if name in _engine_names:
-        from lynx_compare import engine
+        from lynx_compare.core import engine
         return getattr(engine, name)
     raise AttributeError(f"module 'lynx_compare' has no attribute {name!r}")
 
