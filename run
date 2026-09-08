@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+# ./run — one command to start lynx-compare.
+#
+#   ./run [args]          lynx-compare
+#   ./run lynx-compare-server [args]the lynx-compare-server entry point
+#   
+#   First run creates .venv and installs the package editable
+#   (uv when available, else python3 -m venv + pip); later runs skip it.
+#   Sibling packages are installed editable from disk first: ../lynx-investor-core, ../lynx-fundamental
+#
+# Everything is relative to this file, so it works from any directory.
+set -euo pipefail
+cd "$(dirname "$(readlink -f "$0")")"
+
+VENV=".venv"
+if [ ! -x "$VENV/bin/python" ]; then
+    echo "· creating $VENV (first run only)…" >&2
+    if command -v uv >/dev/null 2>&1; then
+        uv venv "$VENV"
+        VIRTUAL_ENV="$PWD/$VENV" uv pip install -e "../lynx-investor-core" -e "../lynx-fundamental" -e .
+    else
+        python3 -m venv "$VENV"
+        "$VENV/bin/pip" install -q --upgrade pip
+        "$VENV/bin/pip" install -q -e "../lynx-investor-core" -e "../lynx-fundamental" -e .
+    fi
+fi
+
+CMD="lynx-compare"
+case "${1:-}" in
+  lynx-compare-server) CMD="lynx-compare-server"; shift ;;
+esac
+
+exec "$VENV/bin/$CMD" "$@"
