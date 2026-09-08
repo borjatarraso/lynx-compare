@@ -2,6 +2,13 @@
 
 from __future__ import annotations
 
+
+from lynx_investor_core.debounce import (
+    DEFAULT_COOLDOWN_MS,
+    LAUNCH_COOLDOWN_MS,
+    ClickDebouncer,
+)
+from lynx_investor_core.translations import t as _t
 import os
 import threading
 import tkinter as tk
@@ -643,6 +650,9 @@ class LynxCompareGUI:
         self._section_cards: list[CollapsibleCard] = []
         self._last_result: ComparisonResult | None = None
         self._egg_buffer = ""
+        # Per-action cooldown gate so a frantic double-click can't fire
+        # the same action twice (Compare / Export / About / Clear).
+        self._click_gate = ClickDebouncer(cooldown_ms=DEFAULT_COOLDOWN_MS)
 
         # Build hidden main UI, then show splash
         self.main_frame = tk.Frame(self.root, bg=BG)
@@ -888,9 +898,13 @@ class LynxCompareGUI:
     # ---- Actions ---------------------------------------------------------
 
     def _on_about(self) -> None:
+        if not self._click_gate.allow("on_about"):
+            return
         AboutDialog(self.root)
 
     def _on_export(self) -> None:
+        if not self._click_gate.allow("on_export"):
+            return
         if self._last_result is None:
             messagebox.showinfo("Export", "No comparison results to export.\nRun a comparison first.")
             return
@@ -901,6 +915,9 @@ class LynxCompareGUI:
         b = self.entry_b.get().strip()
         if not a or not b:
             self.status_var.set("Please enter both company identifiers.")
+            return
+        if not self._click_gate.allow(f"compare:{a}:{b}",
+                                      cooldown_ms=LAUNCH_COOLDOWN_MS):
             return
 
         try:
