@@ -99,7 +99,7 @@ Part of the LINCE company · © All rights reserved
 ## Run it
 
 ```bash
-cd ~/claude/lince-investor/lynx-compare
+cd ~/devel/lince-investor/lynx-compare
 ./run                                 # project runner
 lynx-compare                          # console entry point
 lynx-compare-server                   # console entry point
