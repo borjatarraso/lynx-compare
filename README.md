@@ -10,6 +10,13 @@ publicly traded companies across seven fundamental analysis sections:
 valuation, profitability, solvency, growth, efficiency, moat, and
 intrinsic value.
 
+## Quick install
+
+```bash
+make    # create .venv and install the package + its dependencies
+./run   # start with the defaults
+```
+
 ## Features
 
 - **Seven comparison sections** -- valuation, profitability, solvency,
